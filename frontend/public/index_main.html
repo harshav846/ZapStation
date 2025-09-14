@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EV Charge - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles_main.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+
+  <!-- Header Section with Navbar -->
+  <header>
+    <div class="new-navbar">
+      <div class="logo-container">
+        <img src="./images/logo.png" alt="Logo" class="logo">
+        <span class="site-title">ZAP Station</span>
+      </div>
+      <ul>
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">About EVs</a></li>
+        <li><a href="#services">Our Services</a></li>
+        <li><a href="#contact">Contact us</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Hero Section with Map Preview -->
+  <section id="hero">
+    <div class="hero-content">
+      <h1>Welcome to ZAP Station</h1>
+      <p>Find the nearest EV charging stations and book your slot instantly.</p>
+    </div>
+
+    <div id="map-preview-container" onclick="openFullMap()"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+      // Open full map page on click
+      function openFullMap() {
+        window.location.href = "map.html";
+      }
+
+      // Small preview map initialization
+      var previewMap = L.map('map-preview-container', {
+        center: [20.5937, 78.9629], // Centered in India
+        zoom: 5,
+        dragging: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        touchZoom: false,
+        boxZoom: false,
+        zoomControl: false
+      });
+
+      // Add OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(previewMap);
+    </script>
+  
+    <!-- Call-to-Action Button -->
+    <div class="cta-buttons">
+      <a href="/map.html" class="cta-button">Find Charging Station</a>
+    </div>
+
+    <!-- Quick Access Cards -->
+    <div class="main-container">
+      <div class="image-text-container" onclick="window.location.href='booking_history.html'">
+        <div class="small-container">
+          <img src="./images/history.png" alt="History">
+        </div>
+        <p class="image-text">History</p>
+      </div>
+      
+      <div class="image-text-container" onclick="handleClick('Liked')">
+        <div class="small-container">
+          <img src="./images/liked.png" alt="Liked">
+        </div>
+        <p class="image-text">Liked</p>
+      </div>
+      
+      <div class="image-text-container" onclick="window.location.href='active_bookings.html'">
+        <div class="small-container">
+          <img src="./images/active bookings.png" alt="Active bookings">
+        </div>
+        <p class="image-text">Active Bookings</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About & Services Section -->
+  <section class="info-section">
+    <div class="container" id="about">
+      <h2>About Electric Vehicles</h2>
+      <p>Electric vehicles (EVs) are the future of sustainable transportation...</p>
+    </div>
+
+    <div class="container" id="services">
+      <h2>Our Services</h2>
+      <ul>
+        <li>Find the nearest charging stations in your area</li>
+        <li>Book charging slots in advance to avoid waiting</li>
+        <li>Easy navigation to the selected charging station</li>
+        <li>Real-time updates on station availability</li>
+      </ul>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="container" id="contact">
+      <h2>Contact Us</h2>
+      <p>We'd love to hear from you!</p>
+      <p><strong>Email:</strong> support@zapstation.com</p>
+      <p><strong>Phone:</strong> +1 123 456 7890</p>
+      <p><strong>Address:</strong> 123 Zap Station Lane, Electric City, EV 12345</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 EV Charge - All Rights Reserved</p>
+  </footer>
+</body>
+</html>

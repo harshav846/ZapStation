@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Charging Map</title>
+
+    <!-- Leaflet & Routing Machine -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<!-- Leaflet Routing Machine CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Leaflet Routing Machine JS -->
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <style>
+        /* Global Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Map Container */
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Find Nearest Button */
+        #find-nearest {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+
+        #find-nearest:hover {
+            background-color: #0056b3;
+        }
+
+        /* Search Bar Container */
+        .search-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 8px;
+            border-radius: 25px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            width: 350px;
+        }
+
+        /* Search Input */
+        #search-box {
+            border: none;
+            outline: none;
+            font-size: 16px;
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
+        }
+
+        /* Search Button */
+        #search-btn {
+            background-color: #5ad4a3;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        #search-btn:hover {
+            background-color: #00ff8c;
+        }
+
+        /* Popup Styles */
+        .station-popup {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .station-name {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+
+        .popup-button {
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            margin-top: 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .popup-button:hover {
+            background-color: #0056b3;
+        }
+
+        .navigate-button {
+            background-color: #4CAF50;
+        }
+
+        .navigate-button:hover {
+            background-color: #45a049;
+        }
+
+        .book-button {
+            background-color: #008CBA;
+        }
+
+        .book-button:hover {
+            background-color: #0077a3;
+        }
+
+        .info-button {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .info-button:hover {
+            background-color: #333;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .search-container {
+                width: 280px;
+            }
+
+            #search-box {
+                font-size: 14px;
+            }
+
+            #search-btn {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Search Bar -->
+    <div class="search-container">
+        <input type="text" id="search-box" placeholder="Search for a station..." />
+        <button id="search-btn">🔍</button>
+    </div>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    <!-- Find Nearest Button -->
+    <button id="find-nearest">Find Nearest Charging Station</button>
+
+    <!-- Script for Map Functionality -->
+    <script src="./js/map.js" defer></script>
+</body>
+</html>

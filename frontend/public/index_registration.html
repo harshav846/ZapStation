@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - EV Charge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles_registration.css">
+  <script src="./js/register.js" defer></script>
+</head>
+<body>
+  <section id="register">
+    <div class="container">
+      <h2>Create an Account</h2>
+      
+      <!-- Registration Form -->
+      <form id="register-form" method="POST">
+        <!-- Full Name -->
+        <input type="text" id="name" placeholder="Enter your full name" required>
+        
+        <!-- Email -->
+        <input type="email" id="email" placeholder="Enter your email" required>
+        
+        <!-- Mobile Number (Pre-filled & Read-Only from OTP Verification) -->
+        <input type="text" id="mobile-number" placeholder="Mobile number" required readonly>
+        
+        <!-- Password & Confirmation -->
+        <input type="password" id="password" placeholder="Enter your password" required>
+        <input type="password" id="confirm-password" placeholder="Confirm password" required>
+        
+        <!-- Submit Button -->
+        <button type="submit">Sign Up</button>
+      </form>
+
+      <!-- Redirect to Login -->
+      <p>Already have an account? <a href="/index_login.html">Login</a></p>
+    </div>
+  </section>
+</body>
+</html>

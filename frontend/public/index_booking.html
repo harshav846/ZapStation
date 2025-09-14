@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Charging Booking</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./css/styles_booking.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Booking</h2>
+
+        <!-- Station Details -->
+        <section class="station-details">
+            <label for="station">Station Name:</label>
+            <input type="text" id="station" readonly>
+
+            <label for="stationOwner">Owner Contact:</label>
+            <input type="text" id="stationOwner" readonly>
+
+            <label for="stationAddress">Address:</label>
+            <input type="text" id="stationAddress" readonly>
+        </section>
+
+        <!-- User Details -->
+        <section class="user-details">
+            <label for="userName">User Name:</label>
+            <input type="text" id="userName" readonly>
+
+            <label for="userPhone">Mobile Number:</label>
+            <input type="text" id="userPhone" readonly>
+        </section>
+
+        <!-- Charging Point Selection -->
+        <section class="charging-selection">
+            <label for="chargingPoint">Select Charging Point:</label>
+            <select id="chargingPoint">
+                <option value="">--Select Charging Point--</option>
+            </select>
+
+            <label for="vehicleType">Select Vehicle Type:</label>
+            <select id="vehicleType">
+                <option value="">--Select Vehicle Type--</option>
+            </select>
+
+            <label for="chargingType">Charging Type:</label>
+            <input type="text" id="chargingType" readonly>
+
+            <label for="chargerType">Charger Type:</label>
+            <input type="text" id="chargerType" readonly>
+        </section>
+
+        <!-- Slot Selection -->
+        <section class="slot-selection">
+            <label>Select Time Slots:</label>
+            <div id="slot-container"></div>
+        </section>
+
+        <!-- Book Button -->
+        <button id="bookBtn">Book Now</button>
+    </div>
+
+    <!-- Booking JS -->
+    <script src="./js/booking.js"></script>
+</body>
+</html>

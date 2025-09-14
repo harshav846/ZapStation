@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking Confirmation | EV Charging Station</title>
+
+  <style>
+    /* Reset & Global Styles */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f5f7fa; color: #333; line-height: 1.6; }
+
+    /* Container & Layout */
+    .container { max-width: 800px; margin: 50px auto; padding: 30px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    header { text-align: center; margin-bottom: 30px; }
+    .success-icon { color: #4CAF50; font-size: 60px; margin-bottom: 20px; }
+    h1 { color: #2c3e50; margin-bottom: 10px; }
+    .booking-id { background: #f8f9fa; padding: 10px 15px; border-radius: 5px; font-weight: bold; display: inline-block; margin: 10px 0; }
+
+    /* Grid for Confirmation Details */
+    .confirmation-details { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0; }
+    .detail-card { background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #4CAF50; }
+    .detail-card h3 { color: #2c3e50; margin-bottom: 10px; font-size: 18px; }
+
+    /* Action Buttons */
+    .actions { display: flex; justify-content: center; gap: 15px; margin-top: 30px; }
+    .btn { padding: 12px 25px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; text-decoration: none; text-align: center; display: inline-block; }
+    .btn-primary { background-color: #4CAF50; color: white; }
+    .btn-secondary { background-color: #f8f9fa; color: #333; border: 1px solid #ddd; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+
+    /* Footer */
+    footer { text-align: center; margin-top: 40px; color: #7f8c8d; font-size: 14px; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .confirmation-details { grid-template-columns: 1fr; }
+      .container { margin: 20px; padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="success-icon">✓</div>
+      <h1>Booking Confirmed!</h1>
+      <p>Your EV charging slot has been successfully booked</p>
+      <div class="booking-id" id="bookingId">Booking ID: Loading...</div>
+    </header>
+
+    <!-- Booking Details Grid -->
+    <div class="confirmation-details">
+      <!-- Station Details -->
+      <div class="detail-card">
+        <h3>Station Details</h3>
+        <p id="stationName">Loading...</p>
+        <p id="stationAddress">Loading...</p>
+        <p id="chargingPoint">Loading...</p>
+      </div>
+
+      <!-- Booking Info -->
+      <div class="detail-card">
+        <h3>Booking Details</h3>
+        <p id="bookingDate">Loading...</p>
+        <p id="selectedSlots">Loading...</p>
+        <p id="vehicleType">Loading...</p>
+      </div>
+
+      <!-- User Info -->
+      <div class="detail-card">
+        <h3>User Details</h3>
+        <p id="userName">Loading...</p>
+        <p id="userPhone">Loading...</p>
+      </div>
+
+      <!-- Charging & Status -->
+      <div class="detail-card">
+        <h3>Charging Details</h3>
+        <p id="chargerType">Loading...</p>
+        <p id="duration">Loading...</p>
+        <p id="status">Status: Confirmed</p>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions">
+      <a href="/map.html" class="btn btn-primary">Back to Map</a>
+      <a href="/index_main.html" class="btn btn-secondary">Home</a>
+    </div>
+
+    <footer>
+      <p>Need help? Contact support@evcharge.com</p>
+      <p>You'll receive a confirmation email shortly</p>
+    </footer>
+  </div>
+
+  <script>
+    // Helper functions
+    const getVehicleType = (type) => type ? type.charAt(0).toUpperCase() + type.slice(1) : "Not specified";
+    const getChargerType = (type) => type ? type.toUpperCase() : "Not specified";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const bookingData = JSON.parse(sessionStorage.getItem("bookingConfirmation") || "{}");
+      const stationData = JSON.parse(sessionStorage.getItem("selectedStation") || "{}");
+      let userData = JSON.parse(sessionStorage.getItem("userData") || "{}");
+
+      if (!userData?.name && localStorage.getItem("isGuest") === "true") {
+        userData = { name: "Guest User", mobile: "Guest Account", isGuest: true };
+      }
+
+      if (!bookingData || Object.keys(bookingData).length === 0) {
+        window.location.href = "/map.html";
+        return;
+      }
+
+      // Prepare slot info
+      const rawSlots = bookingData.slotNumbers || bookingData.slots || [];
+      const slotsArray = rawSlots.map(s => Number(s?.$numberInt || s)).filter(n => !isNaN(n));
+
+      const bookingTime = bookingData.bookingTime ? new Date(bookingData.bookingTime) : new Date();
+      const formattedTime = bookingTime.toLocaleString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Kolkata" });
+
+      const slotText = slotsArray.length > 0 ? "Slots: " + slotsArray.join(", ") : "No specific slots assigned";
+      const duration = bookingData.duration || (slotsArray.length * 0.5 || 0);
+      const durationText = duration > 0 ? `Duration: ${duration} hour${duration !== 1 ? "s" : ""}` : "Duration: Not specified";
+
+      // Populate UI
+      document.getElementById("bookingId").textContent = `Booking ID: ${bookingData.bookingId || bookingData._id || "N/A"}`;
+      document.getElementById("stationName").textContent = stationData.stationName || "N/A";
+      document.getElementById("stationAddress").textContent = stationData.address || "N/A";
+      document.getElementById("chargingPoint").textContent = `Point: ${bookingData.pointId || "N/A"}`;
+      document.getElementById("bookingDate").textContent = `Booked on: ${formattedTime}`;
+      document.getElementById("selectedSlots").textContent = slotText;
+      document.getElementById("vehicleType").textContent = `Vehicle: ${getVehicleType(bookingData.vehicleType)}`;
+      document.getElementById("userName").textContent = `Name: ${userData.name || "Guest User"}`;
+      document.getElementById("userPhone").textContent = `Phone: ${userData.mobile || "N/A"}`;
+      document.getElementById("chargerType").textContent = `Charger: ${getChargerType(bookingData.chargerType)}`;
+      document.getElementById("duration").textContent = durationText;
+      document.getElementById("status").textContent = `Status: ${bookingData.status || "Confirmed"}`;
+
+      // Show Guest badge
+      if (userData.isGuest) {
+        document.getElementById("userName").innerHTML +=
+          ` <span style="background:#ff6b35;color:white;padding:2px 8px;border-radius:10px;font-size:12px;margin-left:8px;">Guest</span>`;
+      }
+
+      // Clear session to avoid stale data
+      sessionStorage.removeItem("bookingConfirmation");
+    });
+  </script>
+</body>
+</html>

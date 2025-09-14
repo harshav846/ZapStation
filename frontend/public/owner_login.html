@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Login | EV Charging Station</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Body and Container Styling */
+        body {
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Login Box */
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header inside login box */
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header img {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+
+        /* Input Fields */
+        .form-control {
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* Login Button */
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            border: none;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: #dc3545;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Form Container -->
+    <div class="login-container">
+
+        <!-- Login Header -->
+        <div class="login-header">
+            <!-- Logo can be added here if needed -->
+            <h3>Station Owner Login</h3>
+            <p class="text-muted">Access your charging station dashboard</p>
+        </div>
+        
+        <!-- Login Form -->
+        <form id="ownerLoginForm">
+            <div class="form-group">
+                <label for="stationId" class="form-label">Station ID</label>
+                <input type="text" class="form-control" id="stationId" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="stationPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="stationPassword" required>
+                <div id="passwordError" class="error-message"></div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-login">Login</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Owner Login JS -->
+    <script src="./js/owner_login.js"></script>
+</body>
+</html>

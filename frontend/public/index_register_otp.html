@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OTP Verification</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles_register_otp.css">
+  <script src="./js/otp.js" defer></script>
+</head>
+<body>
+  
+  <!-- Firebase reCAPTCHA container -->
+  <div id="recaptcha-container"></div>
+
+  <div class="otp-container">
+    <h2>Mobile Number Verification</h2>
+    <p>Enter your mobile number</p>
+    
+    <!-- Mobile Number Input -->
+    <input type="text" id="mobile-number" placeholder="Enter your mobile number" maxlength="10" pattern="[0-9]{10}" required>
+    <button id="send-otp">Get OTP</button>
+    <p id="otp-message"></p>
+
+    <!-- OTP Verification Section (Initially Hidden) -->
+    <div id="otp-section" style="display: none;">
+      <input type="text" id="otp-input" placeholder="Enter OTP" required>
+      <button id="verify-otp">Verify OTP</button>
+    </div>
+  </div>
+
+</body>
+</html>
