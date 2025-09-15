@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../config/url.js";
+
 document.addEventListener("DOMContentLoaded", () => {
     const mobileInput = document.getElementById("mobile-number");
 
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             // Send registration request to server
-            const response = await fetch("${API_BASE_URL}/auth/register", {
+            const response = await fetch("http://localhost:5000/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, mobile: verifiedMobile, password, email })
