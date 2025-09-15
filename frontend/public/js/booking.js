@@ -313,7 +313,7 @@ async function bookSlot() {
             bookingId: result.bookingId
         }));
 
-        window.location.href = "/index_bookingconfirm.html";
+        window.location.href = "/index_bookingConfirm.html";
 
     } catch (error) {
         alert(`Booking failed: ${error.message}`);
