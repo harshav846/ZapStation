@@ -5,6 +5,11 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const path = require("path");
 const app = express();
+const morgan = require('morgan');
+const fs = require('fs');
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+
 
 
 app.get("/test", (req, res) => {
@@ -21,9 +26,17 @@ connectDB();
 /* ==============================
    Middleware
    ============================== */
+   app.use(morgan('combined'));
 app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "../frontend/public")));
+app.use(helmet());
+app.use("/auth", rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10, // 10 requests per 15 min
+  message: "Too many attempts, try later"
+}));
+
 
 // Configure Session
 app.use(session({
@@ -32,6 +45,14 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: false }  // ⚠️ set true in production with HTTPS
 }));
+// Create a write stream (in append mode)
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'access.log'), 
+  { flags: 'a' } // 'a' for append
+);
+
+// Log all requests to access.log
+app.use(morgan('combined', { stream: accessLogStream }));
 
 /* ==============================
    Routes

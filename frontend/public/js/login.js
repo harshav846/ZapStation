@@ -7,15 +7,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // Guest Login
     document.getElementById("guest-login")?.addEventListener("click", async () => {
         try {
+            showLoader();
             const response = await fetch("http://localhost:5000/auth/guest/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" }
             });
 
             const data = await response.json();
+            hideLoader();
 
             if (response.ok) {
-                // Store guest user data in session and local storage
                 const userData = {
                     name: data.user.name,
                     mobile: data.user.mobile,
@@ -34,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert(data.error || "Guest login failed");
             }
         } catch (error) {
+            hideLoader();
             console.error("Guest Login Error:", error);
             alert("Server error. Try again.");
         }
@@ -41,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Normal User Login
     loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault(); // Prevent page reload
+        e.preventDefault();
 
         const loginValue = loginInput.value.trim();
         const password = passwordInput.value.trim();
@@ -53,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
+            showLoader();
             const response = await fetch("http://localhost:5000/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -60,12 +63,12 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             const data = await response.json();
+            hideLoader();
 
             if (response.ok) {
                 loginMessage.textContent = "Login successful! Redirecting...";
                 loginMessage.style.color = "green";
 
-                // Store user data in session and local storage
                 const userData = {
                     name: data.user.name,
                     mobile: data.user.mobile,
@@ -90,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 loginMessage.style.color = "red";
             }
         } catch (error) {
+            hideLoader();
             console.error("Login Error:", error);
             loginMessage.textContent = "Server error. Try again.";
             loginMessage.style.color = "red";

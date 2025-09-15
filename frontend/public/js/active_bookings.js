@@ -12,16 +12,20 @@ async function loadActiveBookings() {
   const mobile = userData.mobile;
 
   try {
+    showLoader(); // Show loader before API call
+
     // Fetch only bookings with "confirmed" status
     const response = await fetch(`/bookings/active/${mobile}`);
     if (!response.ok) throw new Error("Failed to fetch active bookings");
     
     const activeBookings = await response.json();
     renderActiveBookings(activeBookings);
-    
+
   } catch (err) {
     console.error("Error loading active bookings:", err);
     alert(err.message);
+  } finally {
+    hideLoader(); // Hide loader after API call finishes
   }
 }
 

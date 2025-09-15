@@ -51,30 +51,46 @@ async function loadTodayBookings() {
             throw new Error(errorData.error || 'Failed to load bookings');
         }
 
-        const bookings = await response.json();
+        let bookings = await response.json();
+
+        // Sort bookings by latest first
+        bookings.sort((a, b) => new Date(b.bookingTime) - new Date(a.bookingTime));
+
         renderBookings(bookings, 'today-bookings');
     } catch (error) {
         alert('Failed to load today\'s bookings: ' + error.message);
     }
 }
 
+
 // Fetch and render all bookings (default filter by current date)
 async function loadAllBookings() {
   const stationId = localStorage.getItem('stationId'); 
-  const today = new Date();  
-  const year = today.getFullYear();
-  const month = today.getMonth() + 1;
-  const day = today.getDate();
 
-  const response = await fetch(`/api/bookings/station/${stationId}?year=${year}&month=${month}&day=${day}`, {
+  try {
+    const response = await fetch(`/bookings/station/${stationId}`, {
       headers: {
           'Authorization': `Bearer ${localStorage.getItem('ownerToken')}`
       }
-  });
+    });
 
-  const bookings = await response.json();
-  renderBookings(bookings, 'all-bookings'); 
+    if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || 'Failed to fetch bookings');
+    }
+
+    let bookings = await response.json();
+
+    // Sort bookings: latest first
+    bookings.sort((a, b) => new Date(b.bookingTime) - new Date(a.bookingTime));
+
+    renderBookings(bookings, 'all-bookings'); 
+  } catch (error) {
+    alert("Failed to load bookings: " + error.message);
+  }
 }
+
+
 
 // Apply status and date filters for bookings
 async function applyAllFilters() {
@@ -94,6 +110,7 @@ async function applyAllFilters() {
     if (!response.ok) throw new Error("Failed to fetch bookings");
 
     const bookings = await response.json();
+    bookings.sort((a, b) => new Date(b.bookingTime) - new Date(a.bookingTime));
     renderBookings(bookings, 'all-bookings');
   } catch (error) {
     alert("Something went wrong while applying filters.");

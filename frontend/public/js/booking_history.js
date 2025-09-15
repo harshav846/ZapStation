@@ -28,6 +28,8 @@ function formatSlotNumbers(slotNumbers) {
 // Fetch booking history for a user
 async function fetchBookingHistory(mobile) {
     try {
+        showLoader(); // Show loader before API call
+
         let response = await fetch(`http://localhost:5000/bookings/user-bookings/${mobile}`);
         let bookings = await response.json();
 
@@ -72,5 +74,8 @@ async function fetchBookingHistory(mobile) {
 
     } catch (error) {
         console.error("❌ Error fetching booking history:", error);
+        alert("Failed to load booking history. Please try again.");
+    } finally {
+        hideLoader(); // Hide loader after API call finishes
     }
 }

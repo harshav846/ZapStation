@@ -18,6 +18,7 @@
 <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+<script src="js/loader.js" defer></script>
     <style>
         /* Global Styles */
         body, html {
@@ -190,6 +191,10 @@
     </style>
 </head>
 <body>
+    <div id="loader">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+</div>
     <!-- Search Bar -->
     <div class="search-container">
         <input type="text" id="search-box" placeholder="Search for a station..." />
