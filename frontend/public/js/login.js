@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("guest-login")?.addEventListener("click", async () => {
         try {
             showLoader();
-            const response = await fetch("http://localhost:5000/auth/guest/login", {
+            const response = await fetch("https://zapstation.onrender.com/auth/guest/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" }
             });
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             showLoader();
-            const response = await fetch("http://localhost:5000/auth/login", {
+            const response = await fetch("https://zapstation.onrender.com/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ loginInput: loginValue, password })

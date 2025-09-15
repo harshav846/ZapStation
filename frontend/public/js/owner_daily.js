@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
         // Fetch today's bookings for this station
-        const res = await fetch(`http://localhost:5000/owner/daily/${stationId}`);
+        const res = await fetch(`https://zapstation.onrender.com/owner/daily/${stationId}`);
         if (!res.ok) throw new Error("Failed to fetch bookings");
 
         const bookings = await res.json();
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 // Mark booking as completed
 async function markCompleted(id) {
     try {
-        const res = await fetch(`http://localhost:5000/owner/update-status/${id}`, {
+        const res = await fetch(`https://zapstation.onrender.com/owner/update-status/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ status: "completed" }),

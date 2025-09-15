@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             // Send registration request to server
-            const response = await fetch("http://localhost:5000/auth/register", {
+            const response = await fetch("https://zapstation.onrender.com/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, mobile: verifiedMobile, password, email })

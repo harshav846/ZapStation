@@ -23,7 +23,7 @@ let lastSelectedStation = null;
 
 async function loadStations() {
   try {
-    const response = await fetch("http://localhost:5000/stations/get-stations");
+    const response = await fetch("https://zapstation.onrender.com/stations/get-stations");
     stations = await response.json();
 
     stations.forEach((station) => {
@@ -79,8 +79,8 @@ async function bookStation(stationId) {
   try {
       // Fetch Station Details from Backend
       const [stationResponse, pointsResponse] = await Promise.all([
-          fetch(`http://localhost:5000/stations/${stationId}/details`),
-          fetch(`http://localhost:5000/stations/${stationId}/charging-points`)
+          fetch(`https://zapstation.onrender.com/stations/${stationId}/details`),
+          fetch(`https://zapstation.onrender.com/stations/${stationId}/charging-points`)
       ]);
 
       if (!stationResponse.ok) throw new Error("Failed to fetch station details");

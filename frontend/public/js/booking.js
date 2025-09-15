@@ -48,7 +48,7 @@ function loadChargingPointsDropdown(points) {
 // Fetch charging points from backend
 async function fetchChargingPoints(stationId) {
   try {
-    let response = await fetch(`http://localhost:5000/stations/${stationId}/charging-points`);
+    let response = await fetch(`https://zapstation.onrender.com/stations/${stationId}/charging-points`);
     if (!response.ok) throw new Error("Failed to fetch charging points");
 
     let points = await response.json();
@@ -109,7 +109,7 @@ function getVehicleTypeName(code) {
 // Fetch available slots for a station/point
 async function fetchAvailableSlots(stationId, pointId) {
   try {
-    let response = await fetch(`http://localhost:5000/stations/${stationId}/available-slots?pointId=${pointId}`);
+    let response = await fetch(`https://zapstation.onrender.com/stations/${stationId}/available-slots?pointId=${pointId}`);
     if (!response.ok) throw new Error("Failed to fetch available slots");
 
     let slotsData = await response.json();
@@ -287,7 +287,7 @@ async function bookSlot() {
         bookBtn.disabled = true;
         bookBtn.textContent = "Processing...";
 
-        const response = await fetch("http://localhost:5000/bookings/book-slot", {
+        const response = await fetch("https://zapstation.onrender.com/bookings/book-slot", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

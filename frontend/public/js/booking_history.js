@@ -30,7 +30,7 @@ async function fetchBookingHistory(mobile) {
     try {
         showLoader(); // Show loader before API call
 
-        let response = await fetch(`http://localhost:5000/bookings/user-bookings/${mobile}`);
+        let response = await fetch(`https://zapstation.onrender.com/bookings/user-bookings/${mobile}`);
         let bookings = await response.json();
 
         // Show message if no bookings found

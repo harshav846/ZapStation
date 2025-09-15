@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const session = require("express-session");
+const session = require("cookie-session");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const path = require("path");
@@ -10,11 +10,6 @@ const fs = require('fs');
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 
-
-
-app.get("/test", (req, res) => {
-  res.send("Static serving test works ✅");
-});
 
 // Load environment variables
 dotenv.config();
@@ -43,7 +38,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET || "your_secret_key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }  // ⚠️ set true in production with HTTPS
+    cookie: { secure: process.env.NODE_ENV === "production" }  
 }));
 // Create a write stream (in append mode)
 const accessLogStream = fs.createWriteStream(
@@ -70,8 +65,6 @@ app.use("/stations", stationRoutes);
 app.use("/bookings", bookingRoutes);
 app.use("/owner", ownerAuthRoutes);
 
-// ❌ Removed duplicate app.use('/api/bookings', bookingRoutes);
-//    (You already mount bookings at /bookings)
 
 /* ==============================
    Cron Jobs

@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const response = await fetch("http://localhost:5000/otp/send-otp", {
+            const response = await fetch("https://zapstation.onrender.com/otp/send-otp", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ mobile: userMobile })
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const response = await fetch("http://localhost:5000/otp/verify-otp", {
+            const response = await fetch("https://zapstation.onrender.com/otp/verify-otp", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ mobile: userMobile, otp })
