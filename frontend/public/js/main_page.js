@@ -4,41 +4,55 @@ document.addEventListener("DOMContentLoaded", function () {
     const prevButton = document.querySelector('.prev-button');
     const nextButton = document.querySelector('.next-button');
 
-    // Check if slider elements exist
-    if (images.length === 0 || !prevButton || !nextButton) {
-        console.error("Error: Slider elements not found. Check your HTML structure.");
-        return;
-    }
+    const logoutLink = document.getElementById("logoutLink");
+    if (logoutLink) {
+        logoutLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("isGuest");
+            localStorage.removeItem("guestLimits");
+            sessionStorage.removeItem("userData");
 
-    // Update slider to show current image
-    function updateSlider() {
-        images.forEach((image, index) => {
-            image.classList.toggle('active', index === currentIndex);
+            alert("You have been logged out!");
+            window.location.href = "/index_login.html";
         });
     }
 
-    // Navigate to previous image
-    prevButton.addEventListener('click', () => {
-        showLoader();
-        setTimeout(() => {
-            currentIndex = (currentIndex === 0) ? images.length - 1 : currentIndex - 1;
-            updateSlider();
-            hideLoader();
-        }, 300); // simulate slight delay for loader effect
-    });
+    // ✅ Only init slider if elements exist
+    if (images.length > 0 && prevButton && nextButton) {
+        function updateSlider() {
+            images.forEach((image, index) => {
+                image.classList.toggle('active', index === currentIndex);
+            });
+        }
 
-    // Navigate to next image
-    nextButton.addEventListener('click', () => {
-        showLoader();
-        setTimeout(() => {
-            currentIndex = (currentIndex === images.length - 1) ? 0 : currentIndex + 1;
-            updateSlider();
-            hideLoader();
-        }, 300);
-    });
+        prevButton.addEventListener('click', () => {
+            showLoader();
+            setTimeout(() => {
+                currentIndex = (currentIndex === 0) ? images.length - 1 : currentIndex - 1;
+                updateSlider();
+                hideLoader();
+            }, 300);
+        });
 
-    updateSlider(); // Initialize the slider
-    hideLoader(); // ensure loader hidden on initial load
+        nextButton.addEventListener('click', () => {
+            showLoader();
+            setTimeout(() => {
+                currentIndex = (currentIndex === images.length - 1) ? 0 : currentIndex + 1;
+                updateSlider();
+                hideLoader();
+            }, 300);
+        });
+
+        updateSlider();
+        hideLoader();
+    }
+
+    // ✅ Guest mode
+    showGuestIndicators();
+    if (localStorage.getItem("isGuest") === "true") {
+        disableGuestFeatures();
+    }
 });
 
 // Show guest banner and handle guest mode

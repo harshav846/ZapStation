@@ -15,47 +15,61 @@ async function connectDB() {
     console.log("✅ Connected to DB");
   }
 }
-
 // Release booked slots and cancel no-show bookings daily
 async function releaseSlots() {
   try {
     const today = new Date().toISOString().split("T")[0];
     console.log("🔄 Starting daily reset for date:", today);
 
-    // 1. Cancel today's confirmed bookings where user did not show up
+    // 1. Cancel all PAST bookings that are still "confirmed"
     await Booking.updateMany(
-      { bookingDate: today, status: "confirmed" },
+      { bookingDate: { $lt: today }, status: "confirmed" },
       {
-        status: "cancelled",
-        cancellationReason: "No-show at station (auto-cancelled)",
-        updatedAt: new Date(),
+        $set: {
+          status: "cancelled",
+          cancellationReason: "Expired booking (auto-cancelled)",
+          updatedAt: new Date(),
+        },
       }
     );
 
-    // 2. Reset all booked slots to available
+    // 2. Cancel TODAY’s bookings that are still "confirmed" at midnight (no-show)
+    await Booking.updateMany(
+      { bookingDate: today, status: "confirmed" },
+      {
+        $set: {
+          status: "cancelled",
+          cancellationReason: "No-show at station (auto-cancelled)",
+          updatedAt: new Date(),
+        },
+      }
+    );
+
+    // 3. Reset all slots to available (for next day)
     await Slot.updateMany(
       { isBooked: true },
       { $set: { isBooked: false, updatedAt: new Date() } }
     );
 
-    console.log("✅ Daily reset completed: Slots released and no-shows cancelled");
+    console.log("✅ Daily reset completed: Past bookings cancelled, today's no-shows cancelled, and slots freed");
   } catch (error) {
     console.error("❌ Daily reset error:", error.message);
   }
 }
 
+
 // Schedule daily reset at midnight
-cron.schedule("0 0 * * *", () => {
+/*cron.schedule("0 0 * * *", () => {
   connectDB().then(() => releaseSlots());
-});
+});*/
 
 // If run directly, perform a manual reset
-/*if (require.main === module) {
+if (require.main === module) {
   (async function runManualReset() {
     await connectDB();
     await releaseSlots();
     await mongoose.connection.close();
   })();
-}*/
+}
 
 module.exports = { releaseSlots };
