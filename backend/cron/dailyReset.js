@@ -59,17 +59,17 @@ async function releaseSlots() {
 
 
 // Schedule daily reset at midnight
-/*cron.schedule("0 0 * * *", () => {
+cron.schedule("0 0 * * *", () => {
   connectDB().then(() => releaseSlots());
-});*/
+});
 
 // If run directly, perform a manual reset
-if (require.main === module) {
+/*if (require.main === module) {
   (async function runManualReset() {
     await connectDB();
     await releaseSlots();
     await mongoose.connection.close();
   })();
-}
+}*/
 
 module.exports = { releaseSlots };
