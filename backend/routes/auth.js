@@ -9,14 +9,14 @@ dotenv.config();
 const router = express.Router();
 router.use(express.json());
 
-// 🔹 JWT Secret Key
+// JWT Secret Key
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
 /* ==============================
    User Authentication Routes
    ============================== */
 
-// 🔹 User Login
+// User Login
 router.post("/login", async (req, res) => {
     try {
         const { loginInput, password } = req.body;
@@ -61,7 +61,7 @@ router.post("/login", async (req, res) => {
     }
 });
 
-// 🔹 User Registration
+// User Registration
 router.post("/register", async (req, res) => {
     try {
         const { name, mobile, password, email } = req.body;
@@ -69,27 +69,47 @@ router.post("/register", async (req, res) => {
         // Check if user already exists
         const existingUser = await User.findOne({ $or: [{ mobile }, { email }] });
         if (existingUser) {
+            console.log("⚠️ User already registered:", existingUser);
             return res.status(400).json({ error: "User already registered!" });
         }
-
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Save new user
-        const newUser = new User({ name, mobile, password: hashedPassword, email });
+        // Save user in DB
+        const newUser = new User({ name, mobile, email, password});
         await newUser.save();
+        console.log("New user saved in DB:", newUser);
 
-        console.log("User Registered:", newUser);
+        // Generate JWT for automatic login
+        const token = jwt.sign(
+            {
+                id: newUser._id,
+                name: newUser.name,
+                mobile: newUser.mobile,
+                email: newUser.email
+            },
+            JWT_SECRET,
+            { expiresIn: "1h" }
+        );
 
-        res.status(201).json({
+        // Construct response payload
+        const responsePayload = {
             message: "Registration successful!",
+            token,
+            user: {
+                id: newUser._id,
+                name: newUser.name,
+                mobile: newUser.mobile,
+                email: newUser.email
+            },
             redirect: "/index_main.html"
-        });
+        };
+
+        res.status(201).json(responsePayload);
+
     } catch (error) {
-        console.error("Registration Error:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        console.error("❌ Registration Error:", error);
+        res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
 });
+
 
 /* ==============================
    Guest Login (Temporary Users)

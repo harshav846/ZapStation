@@ -1,18 +1,48 @@
 // Run when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", async () => {
-    let userData = sessionStorage.getItem("userData");
+    let userDataRaw = sessionStorage.getItem("userData");
+    let userData = null;
 
-    // Redirect to login if user not found
-    if (!userData) {
-        alert("You must log in to view booking history!");
-        window.location.href = "/index_login.html";
-        return;
+    try {
+        if (userDataRaw) {
+            userData = JSON.parse(userDataRaw);
+        }
+    } catch (err) {
+        console.error("❌ Failed to parse userData:", err, "Raw:", userDataRaw);
+        userData = null;
     }
+    
 
-    userData = JSON.parse(userData); 
-
+    if (!userData) {
+        const token = localStorage.getItem("authToken");
+        
+        if (token) {
+            // Try to decode user info from token
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                userData = {
+                    name: payload.name,
+                    mobile: payload.mobile,
+                    email: payload.email
+                };
+                sessionStorage.setItem("userData", JSON.stringify(userData));
+            } catch (error) {
+                console.error("Error decoding token:", error);
+                redirectToLogin();
+                return;
+            }
+        } else {
+            redirectToLogin();
+            return;
+        }
+    }
     await fetchBookingHistory(userData.mobile);
 });
+
+function redirectToLogin() {
+    alert("You must log in to view booking history!");
+    window.location.href = "/index_login.html";
+}
 
 // Format slot numbers into a clean string
 function formatSlotNumbers(slotNumbers) {
@@ -28,7 +58,7 @@ function formatSlotNumbers(slotNumbers) {
 // Fetch booking history for a user
 async function fetchBookingHistory(mobile) {
     try {
-        showLoader(); // Show loader before API call
+        showLoader();
 
         let response = await fetch(`https://zapstation.onrender.com/bookings/user-bookings/${mobile}`);
         let bookings = await response.json();
@@ -41,13 +71,10 @@ async function fetchBookingHistory(mobile) {
                 </tr>`;
             return;
         }
-
-        // Sort bookings by latest first
         bookings.sort((a, b) => new Date(b.bookingTime) - new Date(a.bookingTime));
 
         let historyHTML = "";
         bookings.forEach((booking, index) => {
-            // Color coding for status
             let statusColor =
                 booking.status === "cancelled" ? "red"
                 : booking.status === "confirmed" ? "hsla(150, 97.60%, 48.60%, 0.70)"
@@ -68,14 +95,12 @@ async function fetchBookingHistory(mobile) {
                 </tr>
             `;
         });
-        
-        // Insert rows into table
         document.querySelector("#historyTable tbody").innerHTML = historyHTML;
 
     } catch (error) {
         console.error("❌ Error fetching booking history:", error);
         alert("Failed to load booking history. Please try again.");
     } finally {
-        hideLoader(); // Hide loader after API call finishes
+        hideLoader(); 
     }
 }

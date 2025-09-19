@@ -1,21 +1,18 @@
-
+// register.js - Fixed & Clean Version
 document.addEventListener("DOMContentLoaded", () => {
     const mobileInput = document.getElementById("mobile-number");
+    const registerForm = document.getElementById("register-form");
 
-    // Fill mobile number from sessionStorage if already verified
+    // Pre-fill verified mobile number if available
     const verifiedMobile = sessionStorage.getItem("verifiedMobile");
     if (verifiedMobile) {
         mobileInput.value = verifiedMobile;
-        mobileInput.setAttribute("readonly", true); // Make input readonly
+        mobileInput.setAttribute("readonly", true);
     }
 
-    const registerForm = document.getElementById("register-form");
-
-    // Handle registration form submission
     registerForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        // Get user inputs
         const name = document.getElementById("name").value.trim();
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value.trim();
@@ -23,33 +20,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Basic validation
         if (!name || !email || !password || !confirmPassword) {
-            alert("All fields are required!");
+            alert("⚠️ All fields are required!");
             return;
         }
 
         if (password !== confirmPassword) {
-            alert("Passwords do not match!");
+            alert("⚠️ Passwords do not match!");
             return;
         }
 
         try {
-            // Send registration request to server
             const response = await fetch("https://zapstation.onrender.com/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, mobile: verifiedMobile, password, email })
+                body: JSON.stringify({
+                    name,
+                    mobile: verifiedMobile,
+                    password,
+                    email
+                })
             });
 
             const data = await response.json();
 
-            if (response.ok) {
-                alert(data.message);
-                window.location.href = "/index_main.html"; // Redirect to main page
+            if (response.ok && data.token && data.user) {
+                sessionStorage.setItem("authToken", data.token);
+                sessionStorage.setItem("userData", JSON.stringify(data.user));
+                alert(data.message || " Registration successful!");
+                window.location.href = data.redirect || "/index_main.html";
             } else {
-                alert(data.error);
+                alert(data.error || "❌ Registration failed!");
             }
         } catch (error) {
-            alert("Failed to register. Please try again.");
+            console.error("🚨 Registration Error:", error);
+            alert("⚠️ Failed to register. Please try again.");
         }
     });
 });

@@ -12,7 +12,7 @@ async function loadActiveBookings() {
   const mobile = userData.mobile;
 
   try {
-    showLoader(); // Show loader before API call
+    showLoader(); 
 
     // Fetch only bookings with "confirmed" status
     const response = await fetch(`/bookings/active/${mobile}`);
@@ -25,7 +25,7 @@ async function loadActiveBookings() {
     console.error("Error loading active bookings:", err);
     alert(err.message);
   } finally {
-    hideLoader(); // Hide loader after API call finishes
+    hideLoader(); 
   }
 }
 
@@ -41,7 +41,6 @@ function renderActiveBookings(bookings) {
 
   // Generate table rows dynamically
   tbody.innerHTML = bookings.map((booking, index) => {
-    // Color coding for booking status
     let statusColor = "black";
     if (booking.status === "confirmed") statusColor = "hsla(150, 97.60%, 48.60%, 0.70)";
     else if (booking.status === "completed") statusColor = "green";
@@ -63,6 +62,4 @@ function renderActiveBookings(bookings) {
     `;
   }).join('');
 }
-
-// Auto-load active bookings when the page loads
 window.onload = loadActiveBookings;
