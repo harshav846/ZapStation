@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
             sessionStorage.removeItem("userData");
 
             alert("You have been logged out!");
-            window.location.href = "/index_login.html";
+            window.location.href = "/index.html";
         });
     }
 

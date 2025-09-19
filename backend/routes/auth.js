@@ -142,8 +142,6 @@ router.post("/guest/login", async (req, res) => {
             { expiresIn: "24h" }
         );
 
-        console.log("Guest login successful for:", guestUser.name);
-
         // Default guest limits
         const guestLimits = {
             maxBookings: 2,

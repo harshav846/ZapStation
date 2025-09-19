@@ -19,7 +19,6 @@ const safeUserFallback = (req, res, next) => {
                 const tokenValue = token.replace("Bearer ", "").trim();
                 const decoded = jwt.verify(tokenValue, process.env.JWT_SECRET || "your_jwt_secret");
                 req.user = decoded;
-                console.log('✅ Recovered user from token:', req.user);
             } catch (tokenError) {
                 console.error('❌ Token recovery failed:', tokenError.message);
                 req.user = { id: 'fallback_user_id', isGuest: false, name: 'Fallback User' };
@@ -146,7 +145,6 @@ router.post("/book-slot", authenticateUser, safeUserFallback, checkGuestLimits, 
         }
 
         // Create booking
-        // ✅ Create booking
         const newBooking = new Booking({
             ...req.body,
             slots: slotNumbers,
@@ -154,8 +152,8 @@ router.post("/book-slot", authenticateUser, safeUserFallback, checkGuestLimits, 
             status: "confirmed",
             createdAt: new Date(),
             userId: req.user.id, 
-            userName: req.user.name || "Guest User",   // 🔴 always becomes Guest if not set
-            userPhone: req.user.mobile || req.body.userPhone || "N/A" // ✅ ensure phone saved
+            userName: req.user.name || "Guest User",   
+            userPhone: req.user.mobile || req.body.userPhone || "N/A" 
         });
 
 
@@ -174,7 +172,7 @@ router.post("/book-slot", authenticateUser, safeUserFallback, checkGuestLimits, 
     }
 });
 
-// 🔹 Get available slots
+//  Get available slots
 router.get('/slots/available', async (req, res) => {
     const { stationId, pointId, date } = req.query;
     const allSlots = Array.from({ length: 48 }, (_, i) => i + 1); 
@@ -184,7 +182,7 @@ router.get('/slots/available', async (req, res) => {
     res.json(available);
 });
 
-// 🔹 Get user's booking history
+// Get user's booking history
 router.get("/user-bookings/:mobile", async (req, res) => {
     try {
         const { mobile } = req.params;
@@ -198,7 +196,7 @@ router.get("/user-bookings/:mobile", async (req, res) => {
 
 const { authenticateOwner } = require('../middleware/auth');
 
-// 🔹 Get today's bookings for owner's station
+//  Get today's bookings for owner's station
 router.get("/owner/today", async (req, res) => {
     try {
         const { stationId } = req.query;
@@ -234,7 +232,7 @@ router.get("/owner/today", async (req, res) => {
     }
 });
 
-// 🔹 Get bookings by station and optional filters
+//  Get bookings by station and optional filters
 router.get('/station/:stationId', async (req, res) => {
     try {
         const { stationId } = req.params;
@@ -256,7 +254,7 @@ router.get('/station/:stationId', async (req, res) => {
     }
 });
 
-// 🔹 Update booking status (completed/cancelled) and release slots
+// Update booking status (completed/cancelled) and release slots
 router.patch('/:bookingId/status', async (req, res) => {
     try {
         const { bookingId } = req.params;
@@ -290,7 +288,7 @@ router.patch('/:bookingId/status', async (req, res) => {
     }
 });
 
-// 🔹 Get already booked slots
+//  Get already booked slots
 router.get('/booked-slots', async (req, res) => {
     try {
         const bookedSlotsData = await Slot.find({ isBooked: true });
@@ -302,7 +300,7 @@ router.get('/booked-slots', async (req, res) => {
     }
 });
 
-// 🔹 Get active (confirmed) bookings for user
+//  Get active (confirmed) bookings for user
 router.get("/active/:mobile", async (req, res) => {
     try {
         const { mobile } = req.params;
@@ -314,7 +312,7 @@ router.get("/active/:mobile", async (req, res) => {
     }
 });
 
-// 🔹 Get guest booking count for today
+//  Get guest booking count for today
 router.get('/guest/count', authenticateUser, safeUserFallback, async (req, res) => {
     try {
         if (!req.user) {
