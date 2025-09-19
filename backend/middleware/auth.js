@@ -24,21 +24,22 @@ const authenticateOwner = async (req, res, next) => {
     }
 };
 
-// Middleware to authenticate users
 const authenticateUser = (req, res, next) => {
     try {
         // Get token from header
         const token = req.header('Authorization')?.replace('Bearer ', '').trim();
-        if (!token) return res.status(401).json({ error: 'Access Denied! No Token Provided.' });
+        if (!token) {
+            return res.status(401).json({ error: 'Access Denied! No Token Provided.' });
+        }
 
         // Verify token
         const verified = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret');
 
-        // Attach normalized user object to request
+        // Attach user object to request (must exist)
         req.user = {
             id: verified.id,
-            name: verified.name || 'Guest User',
-            mobile: verified.mobile || 'N/A',
+            name: verified.name,   
+            mobile: verified.mobile, 
             email: verified.email || null,
             isGuest: verified.isGuest || false
         };
@@ -46,10 +47,12 @@ const authenticateUser = (req, res, next) => {
         next();
 
     } catch (error) {
+        console.error('Authentication Error:', error);
         if (error.name === 'JsonWebTokenError') return res.status(401).json({ error: 'Invalid Token!' });
         if (error.name === 'TokenExpiredError') return res.status(401).json({ error: 'Token Expired!' });
         res.status(500).json({ error: 'Authentication Error!' });
     }
 };
+
 
 module.exports = { authenticateOwner, authenticateUser };
