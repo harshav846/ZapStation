@@ -101,10 +101,12 @@ node server.js
     Frontend: Open public/index_login.html in your browser
 
     Backend API: http://localhost:5000
+   
+   ---
+   
 
-  **Daily Reset Cron Job**
-
-    To automatically cancel expired bookings and release slots (for testing purpose), run:
-    ```
+ 5. **Daily Reset Cron Job**:
+  
+    To automatically cancel expired bookings and release slots (for testing purpose):
+  ```
     node backend/cron/dailyReset.js
-    ```
